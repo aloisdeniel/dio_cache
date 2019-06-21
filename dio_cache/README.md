@@ -64,6 +64,16 @@ interceptor.store.invalidate("GET", "http://www.flutter.dev");
 interceptor.store.clean(CachePriority.low);
 ```
 
+#### Getting more info about caching status
+
+```dart
+final response = await dio.get("http://www.flutter.dev");
+final cachedExtra = CacheInterceptorResponseExtra.fromExtra(response);
+if(cachedExtra.isFromCache) {
+  print("expiry: ${cachedExtra.cache.expiry}, downloadedAt: ${cachedExtra.cache.downloadedAt}");
+}
+```
+
 ## Availables stores
 
 | name | description |
