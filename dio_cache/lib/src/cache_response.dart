@@ -84,7 +84,9 @@ class CacheResponse {
 
   Response toResponse(RequestOptions options) {
     return Response(
-      extra: CacheInterceptorResponseExtra.cached(this).toExtra(),
+      extra: {}
+        ..addAll(options.extra)
+        ..addAll(CacheInterceptorResponseExtra.cached(this).toExtra()), 
       data: _deserializeData(options.responseType),
       headers: DioHttpHeaders(),
       statusCode: HttpStatus.notModified,

@@ -41,7 +41,7 @@ class CacheInterceptorRequestExtra {
         assert(priority != null),
         assert(expiry != null);
 
-  static const extraKey = "cache_interceptor";
+  static const extraKey = "cache_interceptor_request";
 
   factory CacheInterceptorRequestExtra.fromExtra(RequestOptions request) {
     return request.extra[extraKey];
@@ -55,7 +55,7 @@ class CacheInterceptorRequestExtra {
 }
 
 class CacheInterceptorResponseExtra {
-  static const extraKey = "cache_interceptor";
+  static const extraKey = "cache_interceptor_response";
 
   final CacheResponse cache;
   bool get isFromCache => cache != null;
