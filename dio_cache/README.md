@@ -69,7 +69,7 @@ interceptor.store.clean(CachePriority.low);
 | name | description |
 | [MemoryCacheStore](https://pub.dartlang.org/documentation/dio_cache/latest/dio_cache/MemoryCacheStore-class.html) | Stores all cached responses in a map in memory |
 | [FileCacheStore](https://pub.dartlang.org/documentation/dio_cache/latest/dio_cache/FileCacheStore-class.html) | Stores each request in a dedicated file |
-| [BackupCacheStore](https://pub.dartlang.org/documentation/dio_cache/latest/dio_cache/FileCacheStore-class.html) | Reads values primarly from memory and backup values to specified store (ex: a FileCacheStore) |
+| [BackupCacheStore](https://pub.dartlang.org/documentation/dio_cache/latest/dio_cache/BackupCacheStore-class.html) | Reads values primarly from memory and backup values to specified store (ex: a FileCacheStore) |
 
 ## Features and bugs
 
