@@ -1,5 +1,3 @@
-import 'package:dio/src/options.dart';
-
 import 'package:dio_cache/src/cache_response.dart';
 import 'package:meta/meta.dart';
 
