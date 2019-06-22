@@ -112,7 +112,7 @@ List<int> _serializeCacheResponse(CacheResponse response) {
 }
 
 Future<CacheResponse> _deserializeCacheResponse(File file) async {
-
+  
   final data = await file.readAsBytes();
 
   var i = 4 + 4 + 4;

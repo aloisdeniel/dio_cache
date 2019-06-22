@@ -14,10 +14,9 @@ class CacheInterceptor extends Interceptor {
   final Logger logger;
 
   CacheInterceptor(
-      {CacheStore store, CacheInterceptorRequestExtra options, Logger logger})
+      {CacheStore store, CacheInterceptorRequestExtra options, this.logger})
       : this.store = store ?? MemoryCacheStore(),
-        this.options = options ?? const CacheInterceptorRequestExtra(),
-        this.logger = Logger("CacheInterceptor");
+        this.options = options ?? const CacheInterceptorRequestExtra();
 
   CacheInterceptorRequestExtra _optionsForRequest(RequestOptions options) {
     return CacheInterceptorRequestExtra.fromExtra(options) ?? this.options;
@@ -37,17 +36,17 @@ class CacheInterceptor extends Interceptor {
     existing?.updateRequest(options, !extraOptions.forceUpdate);
 
     if (extraOptions.forceUpdate) {
-      logger.fine("[${options.uri}] Update forced, cache is ignored");
+      logger?.fine("[${options.uri}] Update forced, cache is ignored");
       return await super.onRequest(options);
     }
 
     if (existing == null) {
-      logger.fine("[${options.uri}] No existing cache, starting a new request");
+      logger?.fine("[${options.uri}] No existing cache, starting a new request");
       return await super.onRequest(options);
     }
 
     if (!extraOptions.forceCache && existing.expiry.isBefore(DateTime.now())) {
-      logger.fine(
+      logger?.fine(
           "[${options.uri}] Cache expired since ${existing.expiry}, starting a new request");
       return await super.onRequest(options);
     }
@@ -61,7 +60,7 @@ class CacheInterceptor extends Interceptor {
     if (extraOptions.returnCacheOnError) {
       final existing = CacheResponse.fromError(err);
       if (existing != null) {
-        logger.warning(
+        logger?.warning(
             "[${err.request.uri}] An error occured, but using an existing cache : ${err.error}");
         return existing;
       }
@@ -86,7 +85,7 @@ class CacheInterceptor extends Interceptor {
         final expiry = DateTime.now().add(requestExtra.expiry);
         final newCache = await CacheResponse.fromResponse(
             response, expiry, requestExtra.priority);
-        logger.fine(
+        logger?.fine(
             "[${response.request.uri}] Creating a new cache entry than expires on  $expiry");
         await this.store.set(newCache);
       }

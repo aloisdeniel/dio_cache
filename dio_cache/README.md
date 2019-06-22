@@ -74,6 +74,13 @@ if(cachedExtra.isFromCache) {
 }
 ```
 
+#### Logging caching operations
+
+```dart
+final dio = Dio()
+  ..interceptors.add(CacheInterceptor(logger: Logger("Cache")));
+```
+
 ## Availables stores
 
 | name | description |

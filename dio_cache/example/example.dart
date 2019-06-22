@@ -13,6 +13,7 @@ main() async {
 
   // Add the interceptor with optional options
   final cacheInterceptor = CacheInterceptor(
+    logger: Logger("Cache"),
     store: BackupCacheStore(
        backupStore: FileCacheStore(Directory(".cache"))
     ),
@@ -45,7 +46,7 @@ main() async {
     extra: CacheInterceptorRequestExtra(
       forceUpdate: true
     ).toExtra(),
-  ) );
+  ));
   print("Forced -> statusCode: ${forcedResponse.statusCode}, data : ${forcedResponse.data.substring(0,20)}...");
 
    // To get more info about the cache
