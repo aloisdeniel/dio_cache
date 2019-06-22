@@ -17,7 +17,7 @@ main() async {
     store: BackupCacheStore(
        backupStore: FileCacheStore(Directory(".cache"))
     ),
-    options: const CacheInterceptorRequestExtra(
+    options: const CacheOptions(
       expiry: const Duration(minutes: 30)
     ),
   );
@@ -35,7 +35,7 @@ main() async {
   print("Cached -> statusCode: ${cachedResponse.statusCode}, data : ${distantResponse.data.substring(0,20)}...");
 
   // To get more info about the cache
-  final cachedExtra = CacheInterceptorResponseExtra.fromExtra(cachedResponse);
+  final cachedExtra = CacheResult.fromExtra(cachedResponse);
   if(cachedExtra.isFromCache) {
     print("expiry: ${cachedExtra.cache.expiry}, downloadedAt: ${cachedExtra.cache.downloadedAt}");
   }
@@ -43,14 +43,14 @@ main() async {
 
   // The new request will get data and add it to cache
   final forcedResponse = await dio.get("http://www.flutter.dev", options: Options(
-    extra: CacheInterceptorRequestExtra(
+    extra: CacheOptions(
       forceUpdate: true
     ).toExtra(),
   ));
   print("Forced -> statusCode: ${forcedResponse.statusCode}, data : ${forcedResponse.data.substring(0,20)}...");
 
    // To get more info about the cache
-  final forcedCachedExtra = CacheInterceptorResponseExtra.fromExtra(cachedResponse);
+  final forcedCachedExtra = CacheResult.fromExtra(cachedResponse);
   print("isFromCache: ${forcedCachedExtra.isFromCache}");
 
   // To invalidate a cached request

@@ -1,10 +1,9 @@
 
 import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
 
 import 'cache_response.dart';
 
-class CacheInterceptorRequestExtra {
+class CacheOptions {
   /// The duration after the cached result of the request 
   /// will be expired.
   final Duration expiry;
@@ -29,7 +28,7 @@ class CacheInterceptorRequestExtra {
   /// if expired).
   final bool returnCacheOnError;
 
-  const CacheInterceptorRequestExtra(
+  const CacheOptions(
       {this.forceUpdate = false,
       this.forceCache = false,
       this.priority = CachePriority.normal,
@@ -43,7 +42,7 @@ class CacheInterceptorRequestExtra {
 
   static const extraKey = "cache_interceptor_request";
 
-  factory CacheInterceptorRequestExtra.fromExtra(RequestOptions request) {
+  factory CacheOptions.fromExtra(RequestOptions request) {
     return request.extra[extraKey];
   }
 
@@ -52,20 +51,4 @@ class CacheInterceptorRequestExtra {
       extraKey: this,
     };
   }
-}
-
-class CacheInterceptorResponseExtra {
-  static const extraKey = "cache_interceptor_response";
-
-  final CacheResponse cache;
-  bool get isFromCache => cache != null;
-  CacheInterceptorResponseExtra.cached(this.cache);
-  const CacheInterceptorResponseExtra.empty() : this.cache = null;
-
-  factory CacheInterceptorResponseExtra.fromExtra(Response response) {
-    return response.extra[extraKey] ?? const CacheInterceptorResponseExtra.empty();
-  }
-  Map<String, dynamic> toExtra() => {
-        extraKey: this,
-      };
 }

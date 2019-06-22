@@ -20,7 +20,7 @@ final dio = Dio()
 ```dart
 final dio = Dio()
   ..interceptors.add(CacheInterceptor(
-    options: const CacheInterceptorRequestExtra(
+    options: const CacheOptions(
       forceUpdate: false, // Forces to update even if cache isn't expired
       forceCache: false, // Forces to use cache, even if expired
       priority: CachePriority.normal, // Setting a priority to clean only several requests
@@ -46,7 +46,7 @@ final dio = Dio()
 
 ```dart
 final forcedResponse = await dio.get("http://www.flutter.dev", options: Options(
-    extra: CacheInterceptorRequestExtra(
+    extra: CacheOptions(
       forceUpdate: true
     ).toExtra(),
   ));
@@ -68,9 +68,9 @@ interceptor.store.clean(CachePriority.low);
 
 ```dart
 final response = await dio.get("http://www.flutter.dev");
-final cachedExtra = CacheInterceptorResponseExtra.fromExtra(response);
-if(cachedExtra.isFromCache) {
-  print("expiry: ${cachedExtra.cache.expiry}, downloadedAt: ${cachedExtra.cache.downloadedAt}");
+final cachedResult = CacheResult.fromExtra(response);
+if(cachedResult.isFromCache) {
+  print("expiry: ${cachedResult.cache.expiry}, downloadedAt: ${cachedResult.cache.downloadedAt}");
 }
 ```
 

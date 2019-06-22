@@ -1,7 +1,8 @@
 library dio_cache;
 
 export 'src/cache_interceptor.dart';
-export 'src/extra.dart';
+export 'src/options.dart';
+export 'src/result.dart';
 export 'src/cache_response.dart';
 export 'src/stores/cache_store.dart';
 export 'src/stores/filtered_cache_store.dart';

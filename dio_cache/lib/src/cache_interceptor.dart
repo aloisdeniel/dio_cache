@@ -4,22 +4,24 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache/src/cache_response.dart';
 import 'package:dio_cache/src/stores/memory_cache_store.dart';
 import 'package:logging/logging.dart';
-import 'extra.dart';
+
+import 'options.dart';
+import 'result.dart';
 import 'helpers/status_code.dart';
 import 'stores/cache_store.dart';
 
 class CacheInterceptor extends Interceptor {
   final CacheStore store;
-  final CacheInterceptorRequestExtra options;
+  final CacheOptions options;
   final Logger logger;
 
   CacheInterceptor(
-      {CacheStore store, CacheInterceptorRequestExtra options, this.logger})
+      {CacheStore store, CacheOptions options, this.logger})
       : this.store = store ?? MemoryCacheStore(),
-        this.options = options ?? const CacheInterceptorRequestExtra();
+        this.options = options ?? const CacheOptions();
 
-  CacheInterceptorRequestExtra _optionsForRequest(RequestOptions options) {
-    return CacheInterceptorRequestExtra.fromExtra(options) ?? this.options;
+  CacheOptions _optionsForRequest(RequestOptions options) {
+    return CacheOptions.fromExtra(options) ?? this.options;
   }
 
   @override
@@ -72,7 +74,7 @@ class CacheInterceptor extends Interceptor {
   @override
   onResponse(Response response) async {
     final requestExtra = _optionsForRequest(response.request);
-    final extras = CacheInterceptorResponseExtra.fromExtra(response);
+    final extras = CacheResult.fromExtra(response);
 
     // If response is not extracted from cache we save it into the store
     if (!extras.isFromCache && requestExtra.isCached) {

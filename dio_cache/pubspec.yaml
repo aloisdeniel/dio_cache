@@ -1,6 +1,6 @@
 name: dio_cache
 description: A plugin for dio that caches responses for better optimization and offline data access.
-version: 0.1.5-beta
+version: 0.2.0-beta
 homepage: https://github.com/aloisdeniel/dio_cache
 author: aloisdeniel <alois.deniel@outlook.com>
 

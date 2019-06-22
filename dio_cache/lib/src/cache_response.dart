@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 
-import 'extra.dart';
+import 'result.dart';
 
 enum CachePriority {
   low,
@@ -86,7 +86,7 @@ class CacheResponse {
     return Response(
       extra: {}
         ..addAll(options.extra)
-        ..addAll(CacheInterceptorResponseExtra.cached(this).toExtra()), 
+        ..addAll(CacheResult.cached(this).toExtra()), 
       data: _deserializeData(options.responseType),
       headers: DioHttpHeaders(),
       statusCode: HttpStatus.notModified,
