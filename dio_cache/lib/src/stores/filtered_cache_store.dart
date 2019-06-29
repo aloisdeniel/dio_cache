@@ -18,13 +18,13 @@ class FilteredCacheStore extends CacheStore {
   const FilteredCacheStore({@required this.child, @required this.filter});
 
   @override
-  Future<void> delete(String method, String url) {
-    return child.delete(method, url);
+  Future<void> delete(String key) {
+    return child.delete(key);
   }
 
   @override
-  Future<CacheResponse> get(String method, String url) {
-    return child.get(method, url);
+  Future<CacheResponse> get(String key) {
+    return child.get(key);
   }
 
   @override
@@ -36,8 +36,8 @@ class FilteredCacheStore extends CacheStore {
   }
 
   @override
-  Future<void> updateExpiry(String method, String url, DateTime newExpiry) {
-    return child.updateExpiry(method, url, newExpiry);
+  Future<void> updateExpiry(String key, DateTime newExpiry) {
+    return child.updateExpiry(key, newExpiry);
   }
 
   @override

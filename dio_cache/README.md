@@ -21,23 +21,15 @@ final dio = Dio()
 final dio = Dio()
   ..interceptors.add(CacheInterceptor(
     options: const CacheOptions(
+      store: MemoryCacheStore(), // The store used for response cache
       forceUpdate: false, // Forces to update even if cache isn't expired
       forceCache: false, // Forces to use cache, even if expired
       priority: CachePriority.normal, // Setting a priority to clean only several requests
       returnCacheOnError: true, // Returns a cached response on error if available
       isCached: true, // Bypass caching if [false]
       expiry: const Duration(minutes: 1), // The cache expiry, after which a new request is triggered instead of getting the cached response
+      keyBuilder: (request) => "${request.method}_${CacheInterceptor.uuid.v5(Uuid.NAMESPACE_URL, request.uri.toString())}" // Builds the unqie key used for indexing a request in cache (this may be useful if arguments aren't passed in query but in body)
     )
-  )
-);
-```
-
-#### Defining the caching store
-
-```dart
-final dio = Dio()
-  ..interceptors.add(CacheInterceptor(
-    store: FileCacheStore(Directory('.cache')),
   )
 );
 ```
@@ -52,16 +44,10 @@ final forcedResponse = await dio.get("http://www.flutter.dev", options: Options(
   ));
 ```
 
-#### Invalidating a cached value
+#### Cleaning cached values from global store
 
 ```dart
-interceptor.store.invalidate("GET", "http://www.flutter.dev");
-```
-
-#### Cleaning cached values
-
-```dart
-interceptor.store.clean(CachePriority.low);
+interceptor.options.store.clean(CachePriority.low);
 ```
 
 #### Getting more info about caching status
@@ -72,6 +58,13 @@ final cachedResult = CacheResult.fromExtra(response);
 if(cachedResult.isFromCache) {
   print("expiry: ${cachedResult.cache.expiry}, downloadedAt: ${cachedResult.cache.downloadedAt}");
 }
+```
+
+#### Invalidating a cached value  from global store
+
+```dart
+final cachedResult = CacheResult.fromExtra(response);
+interceptor.options.store.invalidate(cachedResult.cache.key);
 ```
 
 #### Logging caching operations

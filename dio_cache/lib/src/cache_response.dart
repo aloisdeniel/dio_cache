@@ -13,6 +13,7 @@ enum CachePriority {
 }
 
 class CacheResponse {
+  final String key;
   final String url;
   final String method;
   final DateTime expiry;
@@ -23,6 +24,7 @@ class CacheResponse {
 
   CacheResponse(
       {@required this.url,
+      @required this.key,
       @required this.expiry,
       @required this.method,
       @required this.priority,
@@ -31,9 +33,10 @@ class CacheResponse {
       @required this.content});
 
   static Future<CacheResponse> fromResponse(
-      Response response, DateTime expiry, CachePriority priority) async {
+      String key, Response response, DateTime expiry, CachePriority priority) async {
     final content = await _serializeData(response.request.responseType, response.data);
     return CacheResponse(
+      key: key,
       url: response.request.uri.toString(),
       method: response.request.method,
       content: content,

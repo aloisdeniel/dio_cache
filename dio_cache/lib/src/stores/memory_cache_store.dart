@@ -5,6 +5,7 @@ import 'cache_store.dart';
 /// 
 /// This store should be used carefully, and 
 class MemoryCacheStore extends CacheStore {
+
   final Map<CachePriority, List<CacheResponse>> _responses = {};
 
   MemoryCacheStore();
@@ -18,23 +19,23 @@ class MemoryCacheStore extends CacheStore {
   }
 
   @override
-  Future<CacheResponse> get(String method, String url) {
-    return Future.value(_responses.entries.expand((x) => x.value).firstWhere((x) => x.url == url && x.method == method, orElse: () => null));
+  Future<CacheResponse> get(String key) {
+    return Future.value(_responses.entries.expand((x) => x.value).firstWhere((x) => x.key == key, orElse: () => null));
   }
 
   @override
   Future<void> set(CacheResponse response) async {
     
-    await this.delete(response.method, response.url);
+    await this.delete(response.key);
 
     final withPriority = _responses.putIfAbsent(response.priority, () => <CacheResponse>[]);
     withPriority.add(response);
   }
 
   @override
-  Future<void> updateExpiry(String method, String url, DateTime newExpiry) {
+  Future<void> updateExpiry(String key, DateTime newExpiry) {
      _responses.entries.forEach((entry) {
-      final index = entry.value.indexWhere((x) => x.url == url && x.method == method);
+      final index = entry.value.indexWhere((x) => x.key == key);
       if(index >= 0) {
         entry.value[index] = entry.value[index].copyWith(expiry: newExpiry);
       }
@@ -44,9 +45,9 @@ class MemoryCacheStore extends CacheStore {
   }
 
   @override
-  Future<void> delete(String method, String url) {
+  Future<void> delete(String key) {
     _responses.entries.forEach((entry) {
-      entry.value.removeWhere((x) => x.url == url && x.method == method);
+      entry.value.removeWhere((x) => x.key == key);
     });
     return Future.value();
   }

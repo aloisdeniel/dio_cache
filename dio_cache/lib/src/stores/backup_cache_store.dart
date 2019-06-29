@@ -29,19 +29,19 @@ class BackupCacheStore extends CacheStore {
   }
 
   @override
-  Future<void> delete(String method, String url) {
-    this.backupStore.delete(method, url);
-    return this.primaryStore.delete(method, url);
+  Future<void> delete(String key) {
+    this.backupStore.delete(key);
+    return this.primaryStore.delete(key);
   }
 
   @override
-  Future<CacheResponse> get(String method, String url) async {
-    final existing = await this.primaryStore.get(method, url);
+  Future<CacheResponse> get(String key) async {
+    final existing = await this.primaryStore.get(key);
     if (existing != null) {
       return existing;
     }
 
-    final backup = await this.backupStore.get(method, url);
+    final backup = await this.backupStore.get(key);
     if (backup != null) {
       await primaryStore.set(backup);
       return backup;
@@ -56,8 +56,8 @@ class BackupCacheStore extends CacheStore {
   }
 
   @override
-  Future<void> updateExpiry(String method, String url, DateTime newExpiry) {
-    this.backupStore.updateExpiry(method, url, newExpiry);
-    return this.primaryStore.updateExpiry(method, url, newExpiry);
+  Future<void> updateExpiry(String key, DateTime newExpiry) {
+    this.backupStore.updateExpiry(key, newExpiry);
+    return this.primaryStore.updateExpiry(key, newExpiry);
   }
 }

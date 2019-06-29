@@ -25,10 +25,9 @@ class FileCacheStore extends CacheStore {
               Directory(path.join(directory.path, priority.index.toString())));
         }));
 
-  File _findFile(String method, String url) {
-    final filename = _fileNameFromUrl(method, url);
+  File _findFile(String key) {
     for (var item in directories.entries) {
-      final file = File(path.join(item.value.path, filename));
+      final file = File(path.join(item.value.path, key));
       if (file.existsSync()) {
         return file;
       }
@@ -36,9 +35,6 @@ class FileCacheStore extends CacheStore {
 
     return null;
   }
-
-  String _fileNameFromUrl(String method, String url) =>
-      method + "_" + uuid.v5(Uuid.NAMESPACE_URL, url);
 
   @override
   Future<void> clean(CachePriority priorityOrBelow) {
@@ -51,16 +47,16 @@ class FileCacheStore extends CacheStore {
   }
 
   @override
-  Future<void> delete(String method, String url) async {
-    final file = await _findFile(method, url);
+  Future<void> delete(String key) async {
+    final file = await _findFile(key);
     if (file != null) {
       await file.delete();
     }
   }
 
   @override
-  Future<CacheResponse> get(String method, String url) async {
-    final file = await _findFile(method, url);
+  Future<CacheResponse> get(String key) async {
+    final file = await _findFile(key);
     if (file != null) {
       final result = await _deserializeCacheResponse(file);
       return result;
@@ -70,9 +66,8 @@ class FileCacheStore extends CacheStore {
 
   @override
   Future<void> set(CacheResponse response) async {
-    await delete(response.method, response.url);
-    final filename = _fileNameFromUrl(response.method, response.url);
-    final file = File(path.join(directories[response.priority].path, filename));
+    await delete(response.key);
+    final file = File(path.join(directories[response.priority].path, response.key));
 
     if (!file.parent.existsSync()) {
       await file.parent.create(recursive: true);
@@ -83,8 +78,8 @@ class FileCacheStore extends CacheStore {
 
   @override
   Future<void> updateExpiry(
-      String method, String url, DateTime newExpiry) async {
-    final file = await _findFile(method, url);
+      String key, DateTime newExpiry) async {
+    final file = await _findFile(key);
     if (file != null) {
       final previous = await _deserializeCacheResponse(file);
       final bytes = _serializeCacheResponse(previous.copyWith(expiry: newExpiry));
